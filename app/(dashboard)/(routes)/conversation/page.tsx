@@ -1,7 +1,5 @@
 "use client";
 
-import { Configuration, OpenAIApi } from "openai";
-
 import * as z from "zod";
 
 import Heading from "@/components/heading";
@@ -20,12 +18,6 @@ import { formSchema } from "./constants";
 import { ChatCompletionRequestMessage } from "openai";
 
 export default function ConversationPage() {
-  const configuration = new Configuration({
-    // apiKey: process.env.OPENAI_API_KEY
-    apiKey: "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",
-  });
-
-  const openai = new OpenAIApi(configuration);
   const router = useRouter();
   const [messages, setMessages] = useState<ChatCompletionRequestMessage[]>([]);
 
@@ -46,16 +38,11 @@ export default function ConversationPage() {
       };
       const newMessages = [...messages, userMessage];
 
-      // const response = await axios.post("/api/conversation", {
-      //   messages: newMessages,
-      // });
-
-      await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
+      const response = await axios.post("/api/conversation", {
         messages: newMessages,
       });
 
-      // setMessages((current) => [...current, userMessage, response.data]);
+      setMessages((current) => [...current, userMessage, response.data]);
 
       form.reset();
     } catch (error: any) {
